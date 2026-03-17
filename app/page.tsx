@@ -12,6 +12,7 @@ import {
 import { AboutContent } from "./components/about-content";
 import { ArtSlideshowContent } from "./components/art-slideshow-content";
 import { BrowserShellContent } from "./components/browser-shell-content";
+import { MobilePortfolioContent, type MobileSectionId } from "./components/mobile-portfolio-content";
 import { WindowIcon } from "./components/window-icon";
 import {
   BROWSER_HOME_URL,
@@ -71,6 +72,8 @@ export default function Home() {
   const [taskbarHeight, setTaskbarHeight] = useState(TASKBAR_DEFAULT_HEIGHT);
   const [useBrowserCompatibilityMode, setUseBrowserCompatibilityMode] = useState(true);
   const [browserDisplayMode, setBrowserDisplayMode] = useState<BrowserDisplayMode>("embed");
+  const [isMobileViewport, setIsMobileViewport] = useState(false);
+  const [activeMobileSection, setActiveMobileSection] = useState<MobileSectionId>("about");
   const [emailSubject, setEmailSubject] = useState(
     () => portfolioConfig.contactEmail.defaultSubject ?? "Portfolio Inquiry",
   );
@@ -469,6 +472,17 @@ export default function Home() {
     openInBrowser(imageUrl, { title: getFileLabelFromUrl(imageUrl) });
   };
 
+  const openArtSlideExternally = (index: number) => {
+    if (artImageUrls.length === 0) {
+      return;
+    }
+
+    const imageCount = artImageUrls.length;
+    const normalizedIndex = ((index % imageCount) + imageCount) % imageCount;
+    const imageUrl = artImageUrls[normalizedIndex];
+    openExternalLink(imageUrl);
+  };
+
   const openAppShortcut = (id: WindowId) => {
     closeStartMenu();
 
@@ -539,6 +553,25 @@ export default function Home() {
       moved: false,
     };
   };
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 860px)");
+    const syncViewportMode = () => setIsMobileViewport(mediaQuery.matches);
+
+    syncViewportMode();
+
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", syncViewportMode);
+      return () => {
+        mediaQuery.removeEventListener("change", syncViewportMode);
+      };
+    }
+
+    mediaQuery.addListener(syncViewportMode);
+    return () => {
+      mediaQuery.removeListener(syncViewportMode);
+    };
+  }, []);
 
   useEffect(() => {
     const updateTaskbarHeight = () => {
@@ -1053,6 +1086,32 @@ export default function Home() {
       />
     );
   };
+
+  if (isMobileViewport) {
+    return (
+      <MobilePortfolioContent
+        activeSection={activeMobileSection}
+        onSectionChange={setActiveMobileSection}
+        aboutTab={aboutTab}
+        setAboutTab={setAboutTab}
+        emailSubject={emailSubject}
+        emailBody={emailBody}
+        onEmailSubjectChange={setEmailSubject}
+        onEmailBodyChange={setEmailBody}
+        onSendEmail={sendEmailFromSite}
+        onOpenResume={() => openExternalLink(portfolioConfig.resume.url)}
+        onOpenLinkedIn={() => openExternalLink(portfolioConfig.linkedin.url)}
+        onOpenProjectLink={openExternalLink}
+        artImageUrls={artImageUrls}
+        artSlideIndex={artSlideIndex}
+        isLoadingArtImages={isLoadingArtImages}
+        artGalleryError={artGalleryError}
+        onPreviousArt={goToPreviousArtSlide}
+        onNextArt={goToNextArtSlide}
+        onOpenArtImage={openArtSlideExternally}
+      />
+    );
+  }
 
   const desktopBottomPadding = taskbarHeight + 8;
   const clockLabel = clock.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });

@@ -33,10 +33,27 @@ export function AboutContent({ aboutTab, setAboutTab }: AboutContentProps) {
         {activeAboutSubtab ? (
           <div className="about-general98">
             <Computer variant="32x32_4" className="about-general-icon" aria-hidden />
-            <div>
-              {activeAboutSubtab.description.map((line, index) => (
-                <p key={`${activeAboutSubtab.id}-${index}-${line}`}>{line}</p>
-              ))}
+            <div className="about-general-text">
+              {activeAboutSubtab.description.map((line, index) => {
+                const trimmedLine = line.trim();
+                if (!trimmedLine) {
+                  return <div key={`${activeAboutSubtab.id}-${index}-spacer`} className="about-line-gap" aria-hidden />;
+                }
+
+                const isHeader = trimmedLine.endsWith(":");
+                const isDescription = /^\s{2,}/.test(line);
+                const lineClassName = isHeader
+                  ? "about-line-header"
+                  : isDescription
+                    ? "about-line-description"
+                    : "about-line-body";
+
+                return (
+                  <p key={`${activeAboutSubtab.id}-${index}-${trimmedLine}`} className={lineClassName}>
+                    {trimmedLine}
+                  </p>
+                );
+              })}
             </div>
           </div>
         ) : (

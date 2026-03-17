@@ -64,34 +64,47 @@ export const portfolioConfig: PortfolioConfig = {
       label: "General",
       description: [
         "Information:",
-        "Kyle Lee",
+        "  Kyle Lee",
+        "  516-589-4504",
+        "  kylelee07@gmail.com",
+        "  US and Canadian Citizen",
+        
+        " ",
         "Aspiring developer, analyst, and creative",
-        "",
-        "US and Canadian Citizen",
-        "Email: kylelee07@example.com",
+        "Open to work",
+        "New York / Ontario",
+        "On Site / Remote",
+
       ],
     },
     {
       id: "skills",
       label: "Skills",
       description: [
-        "Programming: Python(Tensorflow, Numpy, Pandas, FastAPI), C, C++, C#, React, TypeScript, Javascript, SQL, R, Git, Docker, Linux",
-        "Data Analysis: Excel, Tableau, Statistical Modeling, Financial Modeling, Financial Accounting",
-        "Creative: Adobe Photoshop, Adobe Lightroom, Clip Studio Paint, Blender",
-        "Languages: English, Cantonese Chinese",
+        "Programming:",
+        "  Python (Tensorflow, Numpy, Pandas, FastAPI), C, C++, C#, React, TypeScript, Javascript, SQL, R, Git, VS Code, Docker, Linux",
+        "Data Analysis:",
+        "  Excel, Tableau, Statistical Modeling, Financial Modeling, Financial Accounting",
+        "Creative:",
+        "  Adobe Photoshop, Adobe Lightroom, Clip Studio Paint, Blender",
+        "Languages:",
+        "  English, Cantonese Chinese",
       ],
     },
     {
       id: "hobby",
       label: "Hobbys",
       description: [
-        "In my free time, I enjoy drawing, eating at all you can eat hotpot, and rock climbing with my friends!",
+        "In my free time, I enjoy drawing landscapes and concept art. When I'm away from my computer I enjoy eating at all-you-can-eat hotpot and bbq, and rock climbing with my friends!",
+        " ",
+        "Part time water bottle critic.",
+
       ],
     },
   ],
   contactEmail: {
     label: "Email Me",
-    address: "kylelee07@example.com",
+    address: "kylelee07@gmail.com",
     description: "Send me a direct email from this portfolio.",
     defaultSubject: "Hi Kyle!",
   },
@@ -123,8 +136,8 @@ export const portfolioConfig: PortfolioConfig = {
     },
     {
       name: "BlockchainCTF",
-      description: "https://vimeo.com/1169317146?fl=ip&fe=ec",
-      url: "",
+      description: "",
+      url: "https://vimeo.com/1169317146?fl=ip&fe=ec",
     },
     {
       name: "Monte Carlo Sim",

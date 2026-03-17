@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useRef, type TouchEvent } from "react";
 import { portfolioConfig } from "../portfolio.config";
 import { getFileLabelFromUrl } from "../desktop-core";
 
@@ -7,6 +8,7 @@ interface ArtSlideshowContentProps {
   artSlideIndex: number;
   isLoadingArtImages: boolean;
   artGalleryError: string | null;
+  isMobile?: boolean;
   onPrevious: () => void;
   onNext: () => void;
   onOpenImage: (index: number) => void;
@@ -17,6 +19,7 @@ export function ArtSlideshowContent({
   artSlideIndex,
   isLoadingArtImages,
   artGalleryError,
+  isMobile = false,
   onPrevious,
   onNext,
   onOpenImage,
@@ -28,6 +31,35 @@ export function ArtSlideshowContent({
   const previousImageUrl = imageCount > 0 ? artImageUrls[(normalizedIndex - 1 + imageCount) % imageCount] : "";
   const nextImageUrl = imageCount > 0 ? artImageUrls[(normalizedIndex + 1) % imageCount] : "";
   const currentImageLabel = currentImageUrl ? getFileLabelFromUrl(currentImageUrl) : "";
+  const touchStartXRef = useRef<number | null>(null);
+
+  const handleTouchStart = (event: TouchEvent<HTMLButtonElement>) => {
+    if (!hasMultipleImages) {
+      return;
+    }
+    touchStartXRef.current = event.touches[0]?.clientX ?? null;
+  };
+
+  const handleTouchEnd = (event: TouchEvent<HTMLButtonElement>) => {
+    if (!hasMultipleImages || touchStartXRef.current === null) {
+      touchStartXRef.current = null;
+      return;
+    }
+
+    const endX = event.changedTouches[0]?.clientX ?? touchStartXRef.current;
+    const deltaX = endX - touchStartXRef.current;
+    touchStartXRef.current = null;
+
+    if (Math.abs(deltaX) < 28) {
+      return;
+    }
+
+    if (deltaX < 0) {
+      onNext();
+    } else {
+      onPrevious();
+    }
+  };
 
   return (
     <div className="art-gallery-shell">
@@ -42,76 +74,120 @@ export function ArtSlideshowContent({
           </p>
         ) : null}
         {!isLoadingArtImages && !artGalleryError && artImageUrls.length > 0 ? (
-          <div className="art-slideshow98">
-            <button
-              type="button"
-              className="art-slide-arrow"
-              onClick={onPrevious}
-              disabled={!hasMultipleImages}
-              aria-label="Previous image"
-            >
-              ◀
-            </button>
+          isMobile ? (
+            <div className="art-slideshow98-mobile">
+              <button
+                type="button"
+                className="art-mobile-main-preview"
+                onClick={() => onOpenImage(normalizedIndex)}
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+                aria-label="Open current art image"
+              >
+                <span className="art-main-thumb-wrap art-mobile-main-thumb-wrap">
+                  <Image
+                    src={currentImageUrl}
+                    alt={currentImageLabel}
+                    fill
+                    sizes="(max-width: 860px) 92vw, 40vw"
+                    className="art-main-thumb"
+                  />
+                </span>
+                <span className="art-gallery-caption art-main-caption">{currentImageLabel}</span>
+              </button>
+              <div className="art-mobile-controls">
+                <button
+                  type="button"
+                  className="art-mobile-nav-button"
+                  onClick={onPrevious}
+                  disabled={!hasMultipleImages}
+                >
+                  Previous
+                </button>
+                <span className="art-mobile-index">
+                  {normalizedIndex + 1} / {imageCount}
+                </span>
+                <button type="button" className="art-mobile-nav-button" onClick={onNext} disabled={!hasMultipleImages}>
+                  Next
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="art-slideshow98">
+              <button
+                type="button"
+                className="art-slide-arrow"
+                onClick={onPrevious}
+                disabled={!hasMultipleImages}
+                aria-label="Previous image"
+              >
+                ◀
+              </button>
 
-            <button
-              type="button"
-              className="art-side-preview"
-              onClick={onPrevious}
-              disabled={!hasMultipleImages}
-              aria-label="Show previous image"
-            >
-              <span className="art-side-thumb-wrap">
-                <Image src={previousImageUrl} alt="" fill sizes="120px" className="art-side-thumb" />
-              </span>
-            </button>
+              <button
+                type="button"
+                className="art-side-preview"
+                onClick={onPrevious}
+                disabled={!hasMultipleImages}
+                aria-label="Show previous image"
+              >
+                <span className="art-side-thumb-wrap">
+                  <Image src={previousImageUrl} alt="" fill sizes="120px" className="art-side-thumb" />
+                </span>
+              </button>
 
-            <button
-              type="button"
-              className="art-main-preview"
-              onDoubleClick={() => onOpenImage(normalizedIndex)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  onOpenImage(normalizedIndex);
-                }
-              }}
-            >
-              <span className="art-main-thumb-wrap">
-                <Image
-                  src={currentImageUrl}
-                  alt={currentImageLabel}
-                  fill
-                  sizes="(max-width: 900px) 52vw, 40vw"
-                  className="art-main-thumb"
-                />
-              </span>
-              <span className="art-gallery-caption art-main-caption">{currentImageLabel}</span>
-            </button>
+              <button
+                type="button"
+                className="art-main-preview"
+                onDoubleClick={() => onOpenImage(normalizedIndex)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    onOpenImage(normalizedIndex);
+                  }
+                }}
+              >
+                <span className="art-main-thumb-wrap">
+                  <Image
+                    src={currentImageUrl}
+                    alt={currentImageLabel}
+                    fill
+                    sizes="(max-width: 900px) 52vw, 40vw"
+                    className="art-main-thumb"
+                  />
+                </span>
+                <span className="art-gallery-caption art-main-caption">{currentImageLabel}</span>
+              </button>
 
-            <button
-              type="button"
-              className="art-side-preview"
-              onClick={onNext}
-              disabled={!hasMultipleImages}
-              aria-label="Show next image"
-            >
-              <span className="art-side-thumb-wrap">
-                <Image src={nextImageUrl} alt="" fill sizes="120px" className="art-side-thumb" />
-              </span>
-            </button>
+              <button
+                type="button"
+                className="art-side-preview"
+                onClick={onNext}
+                disabled={!hasMultipleImages}
+                aria-label="Show next image"
+              >
+                <span className="art-side-thumb-wrap">
+                  <Image src={nextImageUrl} alt="" fill sizes="120px" className="art-side-thumb" />
+                </span>
+              </button>
 
-            <button
-              type="button"
-              className="art-slide-arrow"
-              onClick={onNext}
-              disabled={!hasMultipleImages}
-              aria-label="Next image"
-            >
-              ▶
-            </button>
-          </div>
+              <button
+                type="button"
+                className="art-slide-arrow"
+                onClick={onNext}
+                disabled={!hasMultipleImages}
+                aria-label="Next image"
+              >
+                ▶
+              </button>
+            </div>
+          )
         ) : null}
       </div>
-      <p className="folder-hint">Use arrows or side previews. Double-click the center image to open it.</p>
+      <p className="folder-hint">
+        {isMobile
+          ? "Swipe the image or use Previous/Next. Tap the image to open it."
+          : "Use arrows or side previews. Double-click the center image to open it."}
+      </p>
     </div>
   );
 }
