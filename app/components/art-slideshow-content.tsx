@@ -139,12 +139,7 @@ export function ArtSlideshowContent({
               <button
                 type="button"
                 className="art-main-preview"
-                onDoubleClick={() => onOpenImage(normalizedIndex)}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter") {
-                    onOpenImage(normalizedIndex);
-                  }
-                }}
+                onClick={() => onOpenImage(normalizedIndex)}
               >
                 <span className="art-main-thumb-wrap">
                   <Image
@@ -186,7 +181,7 @@ export function ArtSlideshowContent({
       <p className="folder-hint">
         {isMobile
           ? "Swipe the image or use Previous/Next. Tap the image to open it."
-          : "Use arrows or side previews. Double-click the center image to open it."}
+          : "Use arrows or side previews. Click the center image to open it."}
       </p>
     </div>
   );

@@ -16,6 +16,8 @@ body {
 
 body {
   background: #008080;
+  font-size: 12px;
+  line-height: 1.3;
 }
 
 svg {
@@ -74,8 +76,9 @@ svg {
 
 .desktop-icon-label {
   text-align: center;
-  font-size: 11px;
-  line-height: 1.1;
+  font-size: 12px;
+  line-height: 1.2;
+  letter-spacing: 0.12px;
   max-width: 80px;
   word-break: break-word;
   padding: 1px 2px 0;
@@ -176,7 +179,7 @@ svg {
   border: 2px outset #fff;
   border-bottom: 0;
   background: #c0c0c0;
-  font-size: 11px;
+  font-size: 12px;
   cursor: default;
 }
 
@@ -273,8 +276,9 @@ svg {
 
 .folder-shortcut-label {
   text-align: center;
-  font-size: 11px;
-  line-height: 1.1;
+  font-size: 12px;
+  line-height: 1.2;
+  letter-spacing: 0.1px;
   padding: 1px 2px 0;
   border: 1px dotted transparent;
   color: #000;
@@ -330,21 +334,36 @@ svg {
   background: #fff;
   padding: 8px;
   overflow: auto;
+  container-type: inline-size;
 }
 
 .art-slideshow98 {
+  position: relative;
   display: grid;
-  grid-template-columns: 28px minmax(80px, 0.23fr) minmax(220px, 0.54fr) minmax(80px, 0.23fr) 28px;
+  grid-template-columns: minmax(72px, 0.23fr) minmax(180px, 0.54fr) minmax(72px, 0.23fr);
   gap: 8px;
   align-items: center;
   min-height: 100%;
+  padding: 0 30px;
 }
 
 .art-slide-arrow {
-  width: 28px;
-  height: 28px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 26px;
+  height: 26px;
   padding: 0;
   font-size: 11px;
+  z-index: 2;
+}
+
+.art-slide-arrow:first-child {
+  left: 0;
+}
+
+.art-slide-arrow:last-child {
+  right: 0;
 }
 
 .art-side-preview,
@@ -393,8 +412,8 @@ svg {
 
 .art-gallery-caption {
   text-align: center;
-  font-size: 11px;
-  line-height: 1.1;
+  font-size: 12px;
+  line-height: 1.2;
   color: #000;
   padding: 1px 2px 0;
   border: 1px dotted transparent;
@@ -460,38 +479,31 @@ svg {
   color: #333;
 }
 
-@media (max-width: 900px) {
+@container (max-width: 540px) {
   .art-slideshow98 {
-    grid-template-columns: 24px 1fr 24px;
-    grid-template-areas:
-      "prev main next"
-      "left main right";
-    row-gap: 8px;
+    grid-template-columns: minmax(56px, 0.22fr) minmax(140px, 0.56fr) minmax(56px, 0.22fr);
+    gap: 6px;
+    padding: 0 26px;
   }
 
-  .art-slide-arrow:first-child {
-    grid-area: prev;
+  .art-slide-arrow {
+    width: 24px;
+    height: 24px;
   }
+}
 
-  .art-slide-arrow:last-child {
-    grid-area: next;
+@container (max-width: 430px) {
+  .art-slideshow98 {
+    grid-template-columns: 1fr;
+    padding: 0 24px;
   }
 
   .art-side-preview {
-    max-width: 180px;
-    justify-self: center;
-  }
-
-  .art-side-preview:first-of-type {
-    grid-area: left;
+    display: none;
   }
 
   .art-main-preview {
-    grid-area: main;
-  }
-
-  .art-side-preview:last-of-type {
-    grid-area: right;
+    grid-column: 1;
   }
 }
 
@@ -510,7 +522,7 @@ svg {
 }
 
 .mail-compose98 label {
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .mail-compose-input,
@@ -536,7 +548,7 @@ svg {
 
 .folder-shortcut-meta {
   margin: 0;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.2;
   text-align: center;
   color: #222;
@@ -545,15 +557,16 @@ svg {
 .missing-link {
   margin: 0;
   color: #555;
-  font-size: 11px;
+  font-size: 12px;
   text-align: center;
   font-style: italic;
 }
 
 .folder-hint {
   margin: 8px 0 0;
-  font-size: 11px;
-  color: #333;
+  font-size: 12px;
+  line-height: 1.3;
+  color: #222;
 }
 
 .browser-shell {
@@ -590,7 +603,7 @@ svg {
   border: 0;
   background: transparent;
   font: inherit;
-  font-size: 11px;
+  font-size: 12px;
   padding: 3px 7px 2px;
   max-width: 130px;
   overflow: hidden;
@@ -632,7 +645,7 @@ svg {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .browser-address-input {
@@ -664,7 +677,7 @@ svg {
 .browser-note {
   margin: 0;
   padding: 6px 8px;
-  font-size: 11px;
+  font-size: 12px;
   border-top: 1px solid #808080;
   box-shadow: inset 0 1px #fff;
   background: #c0c0c0;
@@ -713,7 +726,9 @@ svg {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 11px;
+  font-size: 12px;
+  line-height: 1.25;
+  letter-spacing: 0.12px;
   text-align: left;
   padding: 5px 6px;
   cursor: default;
@@ -754,6 +769,9 @@ svg {
   top: -2px;
   min-width: 220px;
   padding: 2px;
+  max-height: calc(100vh - 56px);
+  overflow-y: auto;
+  overflow-x: hidden;
   z-index: 1805;
 }
 
@@ -763,8 +781,9 @@ svg {
 
 .start-submenu-empty {
   padding: 8px;
-  font-size: 11px;
-  color: #444;
+  font-size: 12px;
+  line-height: 1.25;
+  color: #222;
 }
 
 .start-menu-divider {
@@ -843,7 +862,7 @@ svg {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .task-button98.open {
@@ -862,7 +881,7 @@ svg {
   align-items: center;
   gap: 5px;
   justify-content: flex-start;
-  font-size: 11px;
+  font-size: 12px;
   padding: 0 6px;
   background: #c0c0c0;
 }

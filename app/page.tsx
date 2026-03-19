@@ -67,6 +67,7 @@ export default function Home() {
   const [draggingIcon, setDraggingIcon] = useState<IconDragPreview | null>(null);
   const [isStartMenuOpen, setStartMenuOpen] = useState(false);
   const [activeStartSubmenu, setActiveStartSubmenu] = useState<StartSubmenuId | null>(null);
+  const [startSubmenuOffsetY, setStartSubmenuOffsetY] = useState(0);
   const [aboutTab, setAboutTab] = useState<string>(DEFAULT_ABOUT_TAB_ID);
   const [clock, setClock] = useState(() => new Date());
   const [taskbarHeight, setTaskbarHeight] = useState(TASKBAR_DEFAULT_HEIGHT);
@@ -93,6 +94,7 @@ export default function Home() {
   const iconDragState = useRef<IconDragState | null>(null);
   const suppressIconClick = useRef(false);
   const taskbarRef = useRef<HTMLElement | null>(null);
+  const activeStartSubmenuRef = useRef<HTMLDivElement | null>(null);
   const hasCenteredAboutWindow = useRef(false);
 
   const topWindowId = useMemo(() => {
@@ -890,6 +892,44 @@ export default function Home() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!activeStartSubmenu) {
+      setStartSubmenuOffsetY(0);
+      return;
+    }
+
+    setStartSubmenuOffsetY(0);
+    const clampStartSubmenuToViewport = () => {
+      const submenuElement = activeStartSubmenuRef.current;
+      if (!submenuElement) {
+        return;
+      }
+
+      const viewportTop = DESKTOP_PADDING;
+      const viewportBottom = window.innerHeight - taskbarHeight - DESKTOP_PADDING;
+      const submenuRect = submenuElement.getBoundingClientRect();
+      let nextOffset = 0;
+
+      if (submenuRect.bottom > viewportBottom) {
+        nextOffset -= submenuRect.bottom - viewportBottom;
+      }
+
+      if (submenuRect.top + nextOffset < viewportTop) {
+        nextOffset += viewportTop - (submenuRect.top + nextOffset);
+      }
+
+      setStartSubmenuOffsetY(nextOffset);
+    };
+
+    const frameId = window.requestAnimationFrame(clampStartSubmenuToViewport);
+    window.addEventListener("resize", clampStartSubmenuToViewport);
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      window.removeEventListener("resize", clampStartSubmenuToViewport);
+    };
+  }, [activeStartSubmenu, taskbarHeight]);
+
   const renderWindowBody = (id: WindowId) => {
     if (id === "profile") {
       return <AboutContent aboutTab={aboutTab} setAboutTab={setAboutTab} />;
@@ -904,26 +944,18 @@ export default function Home() {
             <button
               type="button"
               className="folder-shortcut"
-              onDoubleClick={() =>
+              onClick={() =>
                 openInBrowser(portfolioConfig.resume.url, {
                   title: portfolioConfig.pages.resume,
                   mode: "pdf",
                 })
               }
-              onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  openInBrowser(portfolioConfig.resume.url, {
-                    title: portfolioConfig.pages.resume,
-                    mode: "pdf",
-                  });
-                }
-              }}
             >
               <WindowIcon id="resume" variant="32x32_4" className="folder-shortcut-icon" />
               <span className="folder-shortcut-label">{`${portfolioConfig.pages.resume}.pdf`}</span>
             </button>
           </div>
-          <p className="folder-hint">Double-click the file to open it in the embedded browser tab.</p>
+          <p className="folder-hint">Click the file to open it in the embedded browser tab.</p>
         </>
       );
     }
@@ -937,18 +969,13 @@ export default function Home() {
             <button
               type="button"
               className="folder-shortcut"
-              onDoubleClick={() => openExternalLink(portfolioConfig.linkedin.url)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  openExternalLink(portfolioConfig.linkedin.url);
-                }
-              }}
+              onClick={() => openExternalLink(portfolioConfig.linkedin.url)}
             >
               <WindowIcon id="linkedin" variant="32x32_4" className="folder-shortcut-icon" />
               <span className="folder-shortcut-label">{portfolioConfig.pages.linkedin}</span>
             </button>
           </div>
-          <p className="folder-hint">Double-click to open this page directly in a new browser tab.</p>
+          <p className="folder-hint">Click to open this page directly in a new browser tab.</p>
         </>
       );
     }
@@ -977,18 +1004,11 @@ export default function Home() {
                     <button
                       type="button"
                       className="folder-shortcut"
-                      onDoubleClick={() =>
+                      onClick={() =>
                         openInBrowser(targetUrl, {
                           title: targetTitle,
                         })
                       }
-                      onKeyDown={(event) => {
-                        if (event.key === "Enter") {
-                          openInBrowser(targetUrl, {
-                            title: targetTitle,
-                          });
-                        }
-                      }}
                     >
                       <Explorer100 variant="32x32_4" className="folder-shortcut-icon" aria-hidden />
                       <span className="folder-shortcut-label">{hasProjectLink ? project.name : `${project.name}.txt`}</span>
@@ -1003,7 +1023,7 @@ export default function Home() {
             </div>
           )}
           <p className="folder-hint project-folder-hint">
-            Double-click a project file to open it in browser tabs. Projects without links open as text files.
+            Click a project file to open it in browser tabs. Projects without links open as text files.
           </p>
         </div>
       );
@@ -1154,9 +1174,6 @@ export default function Home() {
                   return;
                 }
                 setSelectedDesktopIcon(iconId);
-              }}
-              onDoubleClick={(event) => {
-                event.stopPropagation();
                 openAppShortcut(iconId);
               }}
             >
@@ -1274,7 +1291,11 @@ export default function Home() {
                   <span className="start-menu-arrow">▶</span>
                 </button>
                 {activeStartSubmenu === "projects" ? (
-                  <div className="window start-submenu98">
+                  <div
+                    className="window start-submenu98"
+                    ref={activeStartSubmenuRef}
+                    style={{ transform: `translateY(${startSubmenuOffsetY}px)` }}
+                  >
                     {portfolioConfig.currentProjects.length > 0 ? (
                       portfolioConfig.currentProjects.map((project) => (
                         <button
@@ -1321,7 +1342,11 @@ export default function Home() {
                   <span className="start-menu-arrow">▶</span>
                 </button>
                 {activeStartSubmenu === "links" ? (
-                  <div className="window start-submenu98">
+                  <div
+                    className="window start-submenu98"
+                    ref={activeStartSubmenuRef}
+                    style={{ transform: `translateY(${startSubmenuOffsetY}px)` }}
+                  >
                     <button type="button" className="start-menu-item" onClick={() => openAppShortcut("resume")}>
                       <WindowIcon id="resume" variant="16x16_4" className="taskbar-icon" />
                       <span>{portfolioConfig.pages.resume}</span>
