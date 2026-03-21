@@ -110,7 +110,7 @@ export const portfolioConfig: PortfolioConfig = {
   },
   resume: {
     label: "Resume",
-    url: "https://drive.google.com/file/d/1EOhm4DjyEgATNR-bjZj28Nq6uXbDW_ba/view?usp=sharing",
+    url: "https://drive.google.com/file/d/1y6wdCEuI44ZQAlcBlkfPTOEgSmD3yt9v/view?usp=sharing",
     description: "Open a hosted PDF or personal resume page.",
   },
   linkedin: {
@@ -125,9 +125,14 @@ export const portfolioConfig: PortfolioConfig = {
   },
   currentProjects: [
     {
+      name: "Monte Carlo Sim",
+      description: "",
+      url: "https://github.com/kylelkw/montecarlosim",
+    },
+    {
       name: "Spacial Ink AR Drawing",
       description: "",
-      url: "https://vimeo.com/1167914539?fl=ip&fe=ec",
+      url: "https://github.com/kylelkw/SpacialInk2.0",
     },
     {
       name: "Unlinked Pay",
@@ -138,11 +143,6 @@ export const portfolioConfig: PortfolioConfig = {
       name: "BlockchainCTF",
       description: "",
       url: "https://vimeo.com/1169317146?fl=ip&fe=ec",
-    },
-    {
-      name: "Monte Carlo Sim",
-      description: "A GUI has not been developed at tims point in time",
-      url: "",
     },
     {
       name: "TeenHacksLI",
