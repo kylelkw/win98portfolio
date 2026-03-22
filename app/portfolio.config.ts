@@ -16,6 +16,7 @@ export interface DesktopPagesConfig {
   about: string;
   resume: string;
   linkedin: string;
+  github: string;
   projects: string;
   art: string;
   email: string;
@@ -42,6 +43,7 @@ export interface PortfolioConfig {
   contactEmail: ContactEmail;
   resume: PortfolioLink;
   linkedin: PortfolioLink;
+  github: PortfolioLink;
   artPortfolio: PortfolioLink;
   currentProjects: CurrentProject[];
 }
@@ -51,6 +53,7 @@ export const portfolioConfig: PortfolioConfig = {
     about: "About",
     resume: "Resume",
     linkedin: "LinkedIn",
+    github: "GitHub",
     projects: "Current Projects",
     art: "Art Portfolio",
     email: "Email Me",
@@ -117,6 +120,11 @@ export const portfolioConfig: PortfolioConfig = {
     label: "LinkedIn",
     url: "https://www.linkedin.com/in/kyle-f-lee",
     description: "Connect with me on LinkedIn.",
+  },
+  github: {
+    label: "GitHub",
+    url: "https://github.com/kylelkw",
+    description: "Browse my code and projects on GitHub.",
   },
   artPortfolio: {
     label: "Art Portfolio",

@@ -493,6 +493,11 @@ export default function Home() {
       return;
     }
 
+    if (id === "github") {
+      openExternalLink(portfolioConfig.github.url);
+      return;
+    }
+
     const liveLink = LIVE_LINK_APPS[id];
     if (liveLink) {
       openInBrowser(liveLink.url, { title: liveLink.title, mode: liveLink.mode });
@@ -980,6 +985,26 @@ export default function Home() {
       );
     }
 
+    if (id === "github") {
+      return (
+        <>
+          <h2 className="section-title">{portfolioConfig.pages.github}</h2>
+          <p>{portfolioConfig.github.description}</p>
+          <div className="folder-view">
+            <button
+              type="button"
+              className="folder-shortcut"
+              onClick={() => openExternalLink(portfolioConfig.github.url)}
+            >
+              <WindowIcon id="github" variant="32x32_4" className="folder-shortcut-icon" />
+              <span className="folder-shortcut-label">{portfolioConfig.pages.github}</span>
+            </button>
+          </div>
+          <p className="folder-hint">Click to open this page directly in a new browser tab.</p>
+        </>
+      );
+    }
+
     if (id === "projects") {
       return (
         <div className="projects-shell98">
@@ -1121,6 +1146,7 @@ export default function Home() {
         onSendEmail={sendEmailFromSite}
         onOpenResume={() => openExternalLink(portfolioConfig.resume.url)}
         onOpenLinkedIn={() => openExternalLink(portfolioConfig.linkedin.url)}
+        onOpenGitHub={() => openExternalLink(portfolioConfig.github.url)}
         onOpenProjectLink={openExternalLink}
         artImageUrls={artImageUrls}
         artSlideIndex={artSlideIndex}
@@ -1354,6 +1380,10 @@ export default function Home() {
                     <button type="button" className="start-menu-item" onClick={() => openAppShortcut("linkedin")}>
                       <WindowIcon id="linkedin" variant="16x16_4" className="taskbar-icon" />
                       <span>{portfolioConfig.pages.linkedin}</span>
+                    </button>
+                    <button type="button" className="start-menu-item" onClick={() => openAppShortcut("github")}>
+                      <WindowIcon id="github" variant="16x16_4" className="taskbar-icon" />
+                      <span>{portfolioConfig.pages.github}</span>
                     </button>
                     <button type="button" className="start-menu-item" onClick={() => openAppShortcut("art")}>
                       <WindowIcon id="art" variant="16x16_4" className="taskbar-icon" />

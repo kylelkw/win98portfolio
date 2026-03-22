@@ -1,6 +1,6 @@
 import { portfolioConfig } from "./portfolio.config";
 
-export type WindowId = "profile" | "resume" | "linkedin" | "projects" | "art" | "email" | "browser";
+export type WindowId = "profile" | "resume" | "linkedin" | "github" | "projects" | "art" | "email" | "browser";
 export type IconVariant = "32x32_4" | "16x16_4";
 export type BrowserTabMode = "web" | "pdf";
 export type BrowserDisplayMode = "embed" | "reader";
@@ -364,6 +364,15 @@ export const WINDOW_TEMPLATES: WindowTemplate[] = [
     statusText: "LinkedIn",
   },
   {
+    id: "github",
+    title: portfolioConfig.pages.github,
+    x: 246,
+    y: 164,
+    width: 362,
+    height: 248,
+    statusText: "GitHub",
+  },
+  {
     id: "projects",
     title: portfolioConfig.pages.projects,
     x: 220,
@@ -401,16 +410,17 @@ export const WINDOW_TEMPLATES: WindowTemplate[] = [
   },
 ];
 
-export const ICON_ORDER: WindowId[] = ["profile", "resume", "linkedin", "projects", "art", "email", "browser"];
+export const ICON_ORDER: WindowId[] = ["profile", "resume", "linkedin", "github", "projects", "art", "email", "browser"];
 
 export const ICON_INITIAL_CELLS: Record<WindowId, IconCell> = {
   profile: { col: 0, row: 0 },
   resume: { col: 0, row: 1 },
   linkedin: { col: 0, row: 2 },
-  projects: { col: 0, row: 3 },
-  art: { col: 0, row: 4 },
-  email: { col: 0, row: 5 },
-  browser: { col: 0, row: 6 },
+  github: { col: 0, row: 3 },
+  projects: { col: 0, row: 4 },
+  art: { col: 0, row: 5 },
+  email: { col: 0, row: 6 },
+  browser: { col: 0, row: 7 },
 };
 
 function cellKey(cell: IconCell) {

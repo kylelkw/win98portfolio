@@ -1,4 +1,4 @@
-import { Brush, Computer, Explorer100, FileText, FolderOpen, Globe } from "@react95/icons";
+import { Brush, Computer, Explorer100, FileText, FolderOpen, Globe, Network3 } from "@react95/icons";
 import type { IconVariant, WindowId } from "../desktop-core";
 
 export function WindowIcon({
@@ -20,6 +20,10 @@ export function WindowIcon({
 
   if (id === "linkedin") {
     return <Globe variant={variant} className={className} aria-hidden />;
+  }
+
+  if (id === "github") {
+    return <Network3 variant={variant} className={className} aria-hidden />;
   }
 
   if (id === "projects") {

@@ -8,7 +8,7 @@ import { AboutContent } from "./about-content";
 import { ArtSlideshowContent } from "./art-slideshow-content";
 import { WindowIcon } from "./window-icon";
 
-export type MobileSectionId = "about" | "projects" | "art" | "resume" | "linkedin" | "email";
+export type MobileSectionId = "about" | "projects" | "art" | "resume" | "linkedin" | "github" | "email";
 
 const MOBILE_SECTIONS: Array<{ id: MobileSectionId; label: string; iconId: WindowId }> = [
   { id: "about", label: portfolioConfig.pages.about, iconId: "profile" },
@@ -16,6 +16,7 @@ const MOBILE_SECTIONS: Array<{ id: MobileSectionId; label: string; iconId: Windo
   { id: "art", label: portfolioConfig.pages.art, iconId: "art" },
   { id: "resume", label: portfolioConfig.pages.resume, iconId: "resume" },
   { id: "linkedin", label: portfolioConfig.pages.linkedin, iconId: "linkedin" },
+  { id: "github", label: portfolioConfig.pages.github, iconId: "github" },
   { id: "email", label: portfolioConfig.pages.email, iconId: "email" },
 ];
 
@@ -31,6 +32,7 @@ interface MobilePortfolioContentProps {
   onSendEmail: () => void;
   onOpenResume: () => void;
   onOpenLinkedIn: () => void;
+  onOpenGitHub: () => void;
   onOpenProjectLink: (url: string) => void;
   artImageUrls: string[];
   artSlideIndex: number;
@@ -53,6 +55,7 @@ export function MobilePortfolioContent({
   onSendEmail,
   onOpenResume,
   onOpenLinkedIn,
+  onOpenGitHub,
   onOpenProjectLink,
   artImageUrls,
   artSlideIndex,
@@ -151,6 +154,20 @@ export function MobilePortfolioContent({
           <div className="mobile-action-row">
             <button type="button" onClick={onOpenLinkedIn}>
               Open LinkedIn
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    if (activeSection === "github") {
+      return (
+        <div className="mobile-section-content">
+          <h2 className="section-title">{portfolioConfig.pages.github}</h2>
+          <p>{portfolioConfig.github.description}</p>
+          <div className="mobile-action-row">
+            <button type="button" onClick={onOpenGitHub}>
+              Open GitHub
             </button>
           </div>
         </div>
