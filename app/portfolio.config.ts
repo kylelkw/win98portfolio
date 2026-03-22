@@ -110,7 +110,7 @@ export const portfolioConfig: PortfolioConfig = {
   },
   resume: {
     label: "Resume",
-    url: "https://drive.google.com/file/d/1y6wdCEuI44ZQAlcBlkfPTOEgSmD3yt9v/view?usp=sharing",
+    url: "https://drive.google.com/file/d/1pOaE0IP-gPwOW70YIpiDwTlM9k8OsKjW/view?usp=sharing",
     description: "Open a hosted PDF or personal resume page.",
   },
   linkedin: {
