@@ -113,7 +113,7 @@ export const portfolioConfig: PortfolioConfig = {
   },
   resume: {
     label: "Resume",
-    url: "https://drive.google.com/file/d/1pOaE0IP-gPwOW70YIpiDwTlM9k8OsKjW/view?usp=sharing",
+    url: "https://drive.google.com/file/d/1l4Xl6iCC3eoMM8FJO3oEFeUEpf3_laGy/view?usp=sharing",
     description: "Open a hosted PDF or personal resume page.",
   },
   linkedin: {
@@ -145,7 +145,7 @@ export const portfolioConfig: PortfolioConfig = {
     {
       name: "Unlinked Pay",
       description: "",
-      url: "https://www.youtube.com/watch?v=0d8POpG3pts",
+      url: "https://vimeo.com/1175990441?fl=ip&fe=ec",
     },
     {
       name: "BlockchainCTF",
