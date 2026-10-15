@@ -16,11 +16,12 @@ export interface DesktopPagesConfig {
   about: string;
   resume: string;
   linkedin: string;
-  github: string;
   projects: string;
   art: string;
   email: string;
   browser: string;
+  minesweeper: string;
+  tetris: string;
 }
 
 export interface AboutSubtab {
@@ -43,7 +44,6 @@ export interface PortfolioConfig {
   contactEmail: ContactEmail;
   resume: PortfolioLink;
   linkedin: PortfolioLink;
-  github: PortfolioLink;
   artPortfolio: PortfolioLink;
   currentProjects: CurrentProject[];
 }
@@ -53,11 +53,12 @@ export const portfolioConfig: PortfolioConfig = {
     about: "About",
     resume: "Resume",
     linkedin: "LinkedIn",
-    github: "GitHub",
-    projects: "Current Projects",
+    projects: "Projects",
     art: "Art Portfolio",
     email: "Email Me",
-    browser: "Internet Explorer",
+    browser: "Internet",
+    minesweeper: "Minesweeper",
+    tetris: "Tetris",
   },
   name: "Kyle Lee",
   headline: "Aspiring Developer, Analyst, and Creative Builder",
@@ -70,13 +71,11 @@ export const portfolioConfig: PortfolioConfig = {
         "  Kyle Lee",
         "  516-589-4504",
         "  kylelee07@gmail.com",
-        "  US and Canadian Citizen",
+        "  U.S. and Canadian Citizen",
         
         " ",
-        "Aspiring developer, analyst, and creative",
-        "Open to work",
-        "New York / Ontario",
-        "On Site / Remote",
+        "Software Developer",
+        "Computer Vision Research",
 
       ],
     },
@@ -84,14 +83,14 @@ export const portfolioConfig: PortfolioConfig = {
       id: "skills",
       label: "Skills",
       description: [
-        "Programming:",
-        "  Python (Tensorflow, Numpy, Pandas, FastAPI), C, C++, C#, React, TypeScript, Javascript, SQL, R, Git, VS Code, Docker, Linux",
-        "Data Analysis:",
-        "  Excel, Tableau, Statistical Modeling, Financial Modeling, Financial Accounting",
+        "Programming Languages:",
+        "  Python, C++, C, Rust, TypeScript, JavaScript, HTML/CSS, SQL, PostgreSQL, MongoDB, PHP, MATLAB",
+        "Frameworks & Libraries:",
+        "  PyTorch, NumPy, OpenCV, Pandas, React, Node.js, NextJS, FastAPI, Tailwind, OpenAI API",
+        "Technologies and Tools:",
+        "  Git, GitHub, Docker, CI/CD, AWS, Azure, Linux, Windows, AndroidOS, FreeRTOS, REST APIs",
         "Creative:",
-        "  Adobe Photoshop, Adobe Lightroom, Clip Studio Paint, Blender",
-        "Languages:",
-        "  English, Cantonese Chinese",
+        "  Adobe Photoshop, Adobe Lightroom, Clip Studio Paint, Blender, Unity, Unreal Engine",
       ],
     },
     {
@@ -113,18 +112,13 @@ export const portfolioConfig: PortfolioConfig = {
   },
   resume: {
     label: "Resume",
-    url: "https://drive.google.com/file/d/1l4Xl6iCC3eoMM8FJO3oEFeUEpf3_laGy/view?usp=sharing",
-    description: "Open a hosted PDF or personal resume page.",
+    url: "https://drive.google.com/file/d/1pkLiBIRbPGk7TwhtKIrR1Yiqa-uWOLEO/view?usp=sharing",
+    description: "View my resume, experience, and selected projects.",
   },
   linkedin: {
     label: "LinkedIn",
     url: "https://www.linkedin.com/in/kyle-f-lee",
     description: "Connect with me on LinkedIn.",
-  },
-  github: {
-    label: "GitHub",
-    url: "https://github.com/kylelkw",
-    description: "Browse my code and projects on GitHub.",
   },
   artPortfolio: {
     label: "Art Portfolio",
@@ -133,29 +127,40 @@ export const portfolioConfig: PortfolioConfig = {
   },
   currentProjects: [
     {
-      name: "Monte Carlo Sim",
-      description: "",
-      url: "https://github.com/kylelkw/montecarlosim",
+      name: "MelonSight",
+      description: "An Arduino-based device that uses infrared sensors and machine learning to estimate watermelon ripeness and sweetness without cutting the fruit.",
     },
     {
-      name: "Spacial Ink AR Drawing",
-      description: "",
-      url: "https://github.com/kylelkw/SpacialInk2.0",
+      name: "Glyph",
+      description: "A vision transformer framework that detects image copies even after extreme cropping, overlays, and diffusion-based edits.",
+    },
+    {
+      name: "ARMadillo",
+      description: "A five-stage AArch64 pipeline emulator with hazard detection, value forwarding, and an LRU-managed L1 cache.",
+    },
+    {
+      name: "Koharu",
+      description: "Contributions to a local comic and manga translator, improving GPU memory management and computer vision pipelines for detection, OCR, and translation.",
+    },
+    {
+      name: "Monte Carlo Sim",
+      description: "A Monte Carlo simulation project that explores possible outcomes through repeated random sampling.",
+    },
+    {
+      name: "Spatial Ink",
+      description: "A VR/AR drawing application for Meta Quest 3S that anchors 3D sketches to real-world landmarks using Unity, C#, and OpenCV.",
     },
     {
       name: "Unlinked Pay",
-      description: "",
-      url: "https://vimeo.com/1175990441?fl=ip&fe=ec",
+      description: "A private on-chain payroll application for paying salaries in cryptocurrency while keeping compensation details confidential.",
     },
     {
       name: "BlockchainCTF",
-      description: "",
-      url: "https://vimeo.com/1169317146?fl=ip&fe=ec",
+      description: "A blockchain-based capture-the-flag hackathon project with a connected-wallet interface.",
     },
     {
       name: "TeenHacksLI",
-      description: "",
-      url: "https://www.teenhacksli.com/",
+      description: "A full-stack hackathon platform built with React and TypeScript to support sponsors and host participant projects.",
     },
   ],
 };

@@ -1,6 +1,6 @@
 import { portfolioConfig } from "./portfolio.config";
 
-export type WindowId = "profile" | "resume" | "linkedin" | "github" | "projects" | "art" | "email" | "browser";
+export type WindowId = "profile" | "resume" | "linkedin" | "projects" | "art" | "email" | "browser" | "minesweeper" | "tetris";
 export type IconVariant = "32x32_4" | "16x16_4";
 export type BrowserTabMode = "web" | "pdf";
 export type BrowserDisplayMode = "embed" | "reader";
@@ -79,7 +79,7 @@ export interface BrowserState {
 export const TASKBAR_DEFAULT_HEIGHT = 36;
 export const DESKTOP_PADDING = 8;
 export const ICON_CELL_WIDTH = 90;
-export const ICON_CELL_HEIGHT = 78;
+export const ICON_CELL_HEIGHT = 72;
 export const ICON_TILE_WIDTH = 84;
 export const ICON_TILE_HEIGHT = 72;
 
@@ -304,7 +304,7 @@ function escapeHtml(value: string) {
 export function createTextDocumentDataUrl(filename: string, content: string) {
   const html = `<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(
     filename,
-  )}</title><style>body{margin:0;background:#fff;color:#000;font-family:"MS Sans Serif",Tahoma,sans-serif;font-size:12px;}pre{margin:0;padding:10px;white-space:pre-wrap;word-break:break-word;}</style></head><body><pre>${escapeHtml(
+  )}</title><style>body{margin:0;background:#fff;color:#000;font-family:"MS Sans Serif",Tahoma,sans-serif;font-size:14px;}pre{margin:0;padding:10px;white-space:pre-wrap;word-break:break-word;}</style></head><body><pre>${escapeHtml(
     content,
   )}</pre></body></html>`;
   return `data:text/html;charset=utf-8,${encodeURIComponent(html)}`;
@@ -320,7 +320,7 @@ export function getFileLabelFromUrl(fileUrl: string) {
 }
 
 export const RESUME_PDF_URL = normalizeUrl(portfolioConfig.resume.url);
-export const BROWSER_HOME_URL = normalizeUrl(portfolioConfig.linkedin.url);
+export const BROWSER_HOME_URL = "about:blank";
 export const INITIAL_BROWSER_TAB: BrowserTab = {
   id: "tab-1",
   title: "Home",
@@ -335,6 +335,18 @@ export const LIVE_LINK_APPS: Partial<Record<WindowId, { url: string; title: stri
 export const DEFAULT_ABOUT_TAB_ID = portfolioConfig.aboutSubtabs[0]?.id ?? "about";
 
 export const WINDOW_TEMPLATES: WindowTemplate[] = [
+  {
+    id: "minesweeper",
+    title: portfolioConfig.pages.minesweeper,
+    x: 180, y: 48, width: 380, height: 560,
+    statusText: "9 x 9 board / 10 mines",
+  },
+  {
+    id: "tetris",
+    title: portfolioConfig.pages.tetris,
+    x: 300, y: 18, width: 400, height: 650,
+    statusText: "Arrow keys or touch controls",
+  },
   {
     id: "profile",
     title: portfolioConfig.pages.about,
@@ -364,15 +376,6 @@ export const WINDOW_TEMPLATES: WindowTemplate[] = [
     statusText: "LinkedIn",
   },
   {
-    id: "github",
-    title: portfolioConfig.pages.github,
-    x: 246,
-    y: 164,
-    width: 362,
-    height: 248,
-    statusText: "GitHub",
-  },
-  {
     id: "projects",
     title: portfolioConfig.pages.projects,
     x: 220,
@@ -395,8 +398,8 @@ export const WINDOW_TEMPLATES: WindowTemplate[] = [
     title: portfolioConfig.pages.email,
     x: 186,
     y: 126,
-    width: 430,
-    height: 308,
+    width: 520,
+    height: 500,
     statusText: "Email composer",
   },
   {
@@ -410,17 +413,18 @@ export const WINDOW_TEMPLATES: WindowTemplate[] = [
   },
 ];
 
-export const ICON_ORDER: WindowId[] = ["profile", "resume", "linkedin", "github", "projects", "art", "email", "browser"];
+export const ICON_ORDER: WindowId[] = ["profile", "resume", "linkedin", "projects", "art", "email", "browser", "minesweeper", "tetris"];
 
 export const ICON_INITIAL_CELLS: Record<WindowId, IconCell> = {
   profile: { col: 0, row: 0 },
   resume: { col: 0, row: 1 },
   linkedin: { col: 0, row: 2 },
-  github: { col: 0, row: 3 },
-  projects: { col: 0, row: 4 },
-  art: { col: 0, row: 5 },
-  email: { col: 0, row: 6 },
-  browser: { col: 0, row: 7 },
+  projects: { col: 0, row: 3 },
+  art: { col: 0, row: 4 },
+  email: { col: 0, row: 5 },
+  browser: { col: 0, row: 6 },
+  minesweeper: { col: 0, row: 7 },
+  tetris: { col: 0, row: 8 },
 };
 
 function cellKey(cell: IconCell) {
@@ -472,7 +476,12 @@ export function normalizeIconCells(
   const takenKeys = new Set<string>();
 
   for (const iconId of ICON_ORDER) {
-    const preferredCell = clampCell(cells[iconId] ?? ICON_INITIAL_CELLS[iconId], maxCol, maxRow);
+    const requestedCell = cells[iconId] ?? ICON_INITIAL_CELLS[iconId];
+    const rows = maxRow + 1;
+    const preferredCell = clampCell({
+      col: requestedCell.col + Math.floor(requestedCell.row / rows),
+      row: requestedCell.row % rows,
+    }, maxCol, maxRow);
     const preferredKey = cellKey(preferredCell);
     const finalCell = takenKeys.has(preferredKey)
       ? findClosestFreeCell(preferredCell, takenKeys, maxCol, maxRow)

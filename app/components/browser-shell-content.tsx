@@ -1,4 +1,5 @@
 import type { BrowserDisplayMode, BrowserState, BrowserTab } from "../desktop-core";
+import { portfolioConfig } from "../portfolio.config";
 
 interface BrowserShellContentProps {
   browserState: BrowserState;
@@ -101,7 +102,7 @@ export function BrowserShellContent({
           >
             Reader: {browserDisplayMode === "reader" ? "On" : "Off"}
           </button>
-          <button type="button" onClick={() => onOpenExternal(currentBrowserUrl)}>
+          <button type="button" onClick={() => onOpenExternal(currentBrowserUrl)} disabled={currentBrowserUrl === "about:blank"}>
             Open External
           </button>
         </div>
@@ -126,7 +127,14 @@ export function BrowserShellContent({
       </div>
 
       <div className="browser-view">
-        {activeBrowserTab?.mode === "pdf" ? (
+        {currentBrowserUrl === "about:blank" ? (
+          <div className="browser-home98">
+            <h2 className="section-title">{portfolioConfig.pages.browser}</h2>
+            <p>Enter a website address above to browse inside the portfolio.</p>
+            <p>Some websites require a separate browser tab. LinkedIn opens directly in your browser.</p>
+            <a href={portfolioConfig.linkedin.url} target="_blank" rel="noopener noreferrer">Open Kyle&apos;s LinkedIn profile</a>
+          </div>
+        ) : activeBrowserTab?.mode === "pdf" ? (
           <iframe
             className="browser-pdf"
             src={browserFrameUrl}
@@ -145,7 +153,7 @@ export function BrowserShellContent({
         )}
       </div>
 
-      <p className="browser-note">
+      {currentBrowserUrl !== "about:blank" ? <p className="browser-note">
         If page does not load, please{" "}
         {currentBrowserUrl !== "about:blank" ? (
           <a href={currentBrowserUrl} target="_blank" rel="noopener noreferrer">
@@ -155,7 +163,7 @@ export function BrowserShellContent({
           "click here"
         )}
         {" "}to view directly. You can also toggle Compat or Reader mode.
-      </p>
+      </p> : null}
     </div>
   );
 }

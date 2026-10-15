@@ -78,7 +78,7 @@ function buildErrorHtml(title: string, message: string) {
         border: 2px inset #fff;
         background: #fff;
         padding: 12px;
-        font-size: 12px;
+        font-size: 14px;
         line-height: 1.4;
       }
       code {
@@ -117,7 +117,7 @@ function buildFallbackEmbedHtml(targetUrl: string, message: string) {
         border: 2px inset #fff;
         background: #fff;
         padding: 8px;
-        font-size: 12px;
+        font-size: 14px;
       }
       a {
         color: #0000a8;
@@ -260,7 +260,7 @@ function buildReaderHtml(targetUrl: string, html: string, title: string, message
         border: 2px inset #fff;
         background: #fff;
         padding: 8px;
-        font-size: 12px;
+        font-size: 14px;
       }
       a {
         color: #0000a8;
@@ -272,7 +272,7 @@ function buildReaderHtml(targetUrl: string, html: string, title: string, message
       }
       h2 {
         margin: 10px 0 6px;
-        font-size: 12px;
+        font-size: 14px;
       }
       ul {
         margin: 0 0 10px 16px;
@@ -321,6 +321,7 @@ export async function GET(request: NextRequest) {
       redirect: "follow",
       cache: "no-store",
       headers: PROXY_REQUEST_HEADERS,
+      signal: AbortSignal.timeout(10000),
     });
   } catch {
     return new Response(
@@ -342,7 +343,7 @@ export async function GET(request: NextRequest) {
         `The site returned status ${upstreamResponse.status}. Try Open External for full access.`,
       ),
       {
-        status: upstreamResponse.status,
+        status: 502,
         headers: {
           "Content-Type": "text/html; charset=utf-8",
           "Cache-Control": "no-store",

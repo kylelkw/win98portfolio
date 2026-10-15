@@ -12,8 +12,11 @@ import {
 import { AboutContent } from "./components/about-content";
 import { ArtSlideshowContent } from "./components/art-slideshow-content";
 import { BrowserShellContent } from "./components/browser-shell-content";
+import { ClippyHelper, type ClippyContext } from "./components/clippy-helper";
 import { MobilePortfolioContent, type MobileSectionId } from "./components/mobile-portfolio-content";
 import { WindowIcon } from "./components/window-icon";
+import { MinesweeperContent } from "./components/minesweeper-content";
+import { TetrisContent } from "./components/tetris-content";
 import {
   BROWSER_HOME_URL,
   DEFAULT_ABOUT_TAB_ID,
@@ -50,7 +53,7 @@ import {
   type WindowId,
   type BrowserTabMode,
 } from "./desktop-core";
-import { portfolioConfig } from "./portfolio.config";
+import { portfolioConfig, type CurrentProject } from "./portfolio.config";
 
 export default function Home() {
   const [windows, setWindows] = useState<DesktopWindow[]>(() =>
@@ -74,6 +77,8 @@ export default function Home() {
   const [useBrowserCompatibilityMode, setUseBrowserCompatibilityMode] = useState(true);
   const [browserDisplayMode, setBrowserDisplayMode] = useState<BrowserDisplayMode>("embed");
   const [isMobileViewport, setIsMobileViewport] = useState(false);
+  const [hasCenteredAboutWindow, setHasCenteredAboutWindow] = useState(false);
+  const [isClippyOpen, setIsClippyOpen] = useState(true);
   const [activeMobileSection, setActiveMobileSection] = useState<MobileSectionId>("about");
   const [emailSubject, setEmailSubject] = useState(
     () => portfolioConfig.contactEmail.defaultSubject ?? "Portfolio Inquiry",
@@ -95,7 +100,6 @@ export default function Home() {
   const suppressIconClick = useRef(false);
   const taskbarRef = useRef<HTMLElement | null>(null);
   const activeStartSubmenuRef = useRef<HTMLDivElement | null>(null);
-  const hasCenteredAboutWindow = useRef(false);
 
   const topWindowId = useMemo(() => {
     let topWindow: DesktopWindow | undefined;
@@ -309,6 +313,14 @@ export default function Home() {
     openWindow("browser");
   };
 
+  const openProject = (project: CurrentProject) => {
+    const url = project.url || createTextDocumentDataUrl(
+      `${project.name}.txt`,
+      `${project.name}\n\n${project.description}`,
+    );
+    openInBrowser(url, { title: project.name });
+  };
+
   const navigateBrowser = (rawUrl: string) => {
     const targetUrl = normalizeUrl(rawUrl);
     const targetMode: BrowserTabMode = targetUrl.toLowerCase().endsWith(".pdf") ? "pdf" : "web";
@@ -443,6 +455,16 @@ export default function Home() {
     window.location.href = mailtoLink;
   };
 
+  const requestProjectCode = () => {
+    setEmailSubject("Request for project code");
+    setEmailBody(`Hi ${portfolioConfig.name},\n\nI'd like to request access to the code for one of your projects.\n\nProject name:\nReason for request:\n\nThank you!`);
+    if (isMobileViewport) {
+      setActiveMobileSection("email");
+    } else {
+      openWindow("email");
+    }
+  };
+
   const goToPreviousArtSlide = () => {
     setArtSlideIndex((previousIndex) => {
       const imageCount = artImageUrls.length;
@@ -490,11 +512,6 @@ export default function Home() {
 
     if (id === "linkedin") {
       openExternalLink(portfolioConfig.linkedin.url);
-      return;
-    }
-
-    if (id === "github") {
-      openExternalLink(portfolioConfig.github.url);
       return;
     }
 
@@ -605,12 +622,13 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (hasCenteredAboutWindow.current) {
+    if (hasCenteredAboutWindow) {
       return;
     }
 
-    hasCenteredAboutWindow.current = true;
-    const { maxWidth, maxHeight } = getDesktopBounds();
+    const initialTaskbarHeight = taskbarRef.current?.offsetHeight ?? taskbarHeight;
+    const maxWidth = Math.max(260, window.innerWidth - DESKTOP_PADDING * 2);
+    const maxHeight = Math.max(180, window.innerHeight - initialTaskbarHeight - DESKTOP_PADDING * 2);
 
     setWindows((previousWindows) => {
       const aboutWindow = previousWindows.find((windowItem) => windowItem.id === "profile");
@@ -621,10 +639,10 @@ export default function Home() {
       const effectiveWidth = Math.min(aboutWindow.width, maxWidth);
       const effectiveHeight = Math.min(aboutWindow.height, maxHeight);
       const maxX = Math.max(DESKTOP_PADDING, window.innerWidth - effectiveWidth - DESKTOP_PADDING);
-      const maxY = Math.max(DESKTOP_PADDING, window.innerHeight - taskbarHeight - effectiveHeight - DESKTOP_PADDING);
+      const maxY = Math.max(DESKTOP_PADDING, window.innerHeight - initialTaskbarHeight - effectiveHeight - DESKTOP_PADDING);
       const centeredX = clamp(Math.round((window.innerWidth - effectiveWidth) / 2), DESKTOP_PADDING, maxX);
       const centeredY = clamp(
-        Math.round((window.innerHeight - taskbarHeight - effectiveHeight) / 2),
+        Math.round((window.innerHeight - initialTaskbarHeight - effectiveHeight) / 2),
         DESKTOP_PADDING,
         maxY,
       );
@@ -645,7 +663,8 @@ export default function Home() {
           : windowItem,
       );
     });
-  }, [getDesktopBounds, taskbarHeight]);
+    setHasCenteredAboutWindow(true);
+  }, [hasCenteredAboutWindow, taskbarHeight]);
 
   useEffect(() => {
     let isCancelled = false;
@@ -936,6 +955,8 @@ export default function Home() {
   }, [activeStartSubmenu, taskbarHeight]);
 
   const renderWindowBody = (id: WindowId) => {
+    if (id === "minesweeper") return <MinesweeperContent active={topWindowId === id} />;
+    if (id === "tetris") return <TetrisContent active={topWindowId === id} />;
     if (id === "profile") {
       return <AboutContent aboutTab={aboutTab} setAboutTab={setAboutTab} />;
     }
@@ -985,62 +1006,31 @@ export default function Home() {
       );
     }
 
-    if (id === "github") {
-      return (
-        <>
-          <h2 className="section-title">{portfolioConfig.pages.github}</h2>
-          <p>{portfolioConfig.github.description}</p>
-          <div className="folder-view">
-            <button
-              type="button"
-              className="folder-shortcut"
-              onClick={() => openExternalLink(portfolioConfig.github.url)}
-            >
-              <WindowIcon id="github" variant="32x32_4" className="folder-shortcut-icon" />
-              <span className="folder-shortcut-label">{portfolioConfig.pages.github}</span>
-            </button>
-          </div>
-          <p className="folder-hint">Click to open this page directly in a new browser tab.</p>
-        </>
-      );
-    }
-
     if (id === "projects") {
       return (
         <div className="projects-shell98">
           <h2 className="section-title">{portfolioConfig.pages.projects}</h2>
+          <p className="project-code-notice">
+            Code available upon contact. <a href="#email" onClick={(event) => {
+              event.preventDefault();
+              requestProjectCode();
+            }}>Email Me</a> to request access.
+          </p>
           {portfolioConfig.currentProjects.length > 0 ? (
             <div className="folder-view folder-project-grid project-folder-view">
-              {portfolioConfig.currentProjects.map((project) => {
-                const projectUrl = project.url?.trim() ?? "";
-                const hasProjectLink = projectUrl.length > 0;
-                const projectDescription = project.description.trim();
-                const noLinkTextUrl = createTextDocumentDataUrl(
-                  `${project.name}.txt`,
-                  `${project.name}\n\n${
-                    projectDescription || "No external link is available for this project yet."
-                  }`,
-                );
-                const targetUrl = hasProjectLink ? projectUrl : noLinkTextUrl;
-                const targetTitle = hasProjectLink ? project.name : `${project.name}.txt`;
-
-                return (
-                  <div key={project.name} className="folder-project-item">
-                    <button
-                      type="button"
-                      className="folder-shortcut"
-                      onClick={() =>
-                        openInBrowser(targetUrl, {
-                          title: targetTitle,
-                        })
-                      }
-                    >
-                      <Explorer100 variant="32x32_4" className="folder-shortcut-icon" aria-hidden />
-                      <span className="folder-shortcut-label">{hasProjectLink ? project.name : `${project.name}.txt`}</span>
-                    </button>
-                  </div>
-                );
-              })}
+              {portfolioConfig.currentProjects.map((project) => (
+                <article key={project.name} className="folder-project-item">
+                  <button
+                    type="button"
+                    className="folder-shortcut"
+                    onClick={() => openProject(project)}
+                  >
+                    <Explorer100 variant="32x32_4" className="folder-shortcut-icon" aria-hidden />
+                    <span className="folder-shortcut-label">{project.name}</span>
+                  </button>
+                  <p>{project.description}</p>
+                </article>
+              ))}
             </div>
           ) : (
             <div className="folder-view project-folder-view">
@@ -1048,7 +1038,7 @@ export default function Home() {
             </div>
           )}
           <p className="folder-hint project-folder-hint">
-            Click a project file to open it in browser tabs. Projects without links open as text files.
+            Select a project to view its demo, website, or project notes.
           </p>
         </div>
       );
@@ -1132,8 +1122,27 @@ export default function Home() {
     );
   };
 
+  const browserProject = topWindowId === "browser"
+    ? portfolioConfig.currentProjects.find((project) => project.name === activeBrowserTab?.title)
+    : undefined;
+  const clippyContext: ClippyContext = isMobileViewport
+    ? activeMobileSection === "about" ? "profile" : activeMobileSection
+    : topWindowId === "browser" && activeBrowserTab?.mode === "pdf"
+      ? "resume"
+      : browserProject ? "project" : topWindowId ?? "desktop";
+  const clippy = (
+    <ClippyHelper
+      context={clippyContext}
+      projectName={browserProject?.name}
+      isOpen={isClippyOpen}
+      bottomOffset={isMobileViewport ? 88 : taskbarHeight + 8}
+      onToggle={() => setIsClippyOpen((isOpen) => !isOpen)}
+    />
+  );
+
   if (isMobileViewport) {
     return (
+      <>
       <MobilePortfolioContent
         activeSection={activeMobileSection}
         onSectionChange={setActiveMobileSection}
@@ -1144,9 +1153,9 @@ export default function Home() {
         onEmailSubjectChange={setEmailSubject}
         onEmailBodyChange={setEmailBody}
         onSendEmail={sendEmailFromSite}
+        onRequestProjectCode={requestProjectCode}
         onOpenResume={() => openExternalLink(portfolioConfig.resume.url)}
         onOpenLinkedIn={() => openExternalLink(portfolioConfig.linkedin.url)}
-        onOpenGitHub={() => openExternalLink(portfolioConfig.github.url)}
         onOpenProjectLink={openExternalLink}
         artImageUrls={artImageUrls}
         artSlideIndex={artSlideIndex}
@@ -1156,6 +1165,8 @@ export default function Home() {
         onNextArt={goToNextArtSlide}
         onOpenArtImage={openArtSlideExternally}
       />
+      {activeMobileSection !== "minesweeper" && activeMobileSection !== "tetris" ? clippy : null}
+      </>
     );
   }
 
@@ -1189,6 +1200,7 @@ export default function Home() {
             <button
               key={iconId}
               type="button"
+              aria-label={iconLabel}
               className={`desktop-icon98 ${selectedDesktopIcon === iconId ? "selected" : ""} ${
                 draggingIcon?.id === iconId ? "dragging" : ""
               }`}
@@ -1204,14 +1216,14 @@ export default function Home() {
               }}
             >
               <WindowIcon id={iconId} variant="32x32_4" className="desktop-icon-image" />
-              <span className="desktop-icon-label">{iconLabel}</span>
+              <span className={`desktop-icon-label ${iconId === "minesweeper" ? "desktop-icon-label-nowrap" : ""}`}>{iconLabel}</span>
             </button>
           );
         })}
       </section>
 
       {windows
-        .filter((windowItem) => windowItem.isOpen && !windowItem.isMinimized)
+        .filter((windowItem) => windowItem.isOpen && (!windowItem.isMinimized || windowItem.id === "minesweeper" || windowItem.id === "tetris"))
         .map((windowItem) => (
           <article
             key={windowItem.id}
@@ -1222,6 +1234,9 @@ export default function Home() {
               zIndex: windowItem.zIndex,
               width: `${windowItem.width}px`,
               height: `${windowItem.height}px`,
+              display: windowItem.isMinimized ? "none" : undefined,
+              // Keep the server-rendered About window hidden until its initial bounds are centered.
+              visibility: windowItem.id === "profile" && !hasCenteredAboutWindow ? "hidden" : undefined,
             }}
             onMouseDown={() => focusWindow(windowItem.id)}
           >
@@ -1276,6 +1291,8 @@ export default function Home() {
           </article>
         ))}
 
+      {clippy}
+
       {isStartMenuOpen ? (
         <aside className="window start-menu98" style={{ bottom: taskbarHeight + 4 }}>
           <div className="start-menu-inner">
@@ -1296,6 +1313,13 @@ export default function Home() {
                 <WindowIcon id="profile" variant="16x16_4" className="taskbar-icon" />
                 <span>{portfolioConfig.pages.about}</span>
               </button>
+
+              {(["minesweeper", "tetris"] as const).map((id) => (
+                <button key={id} type="button" className="start-menu-item" onClick={() => openWindow(id)}>
+                  <WindowIcon id={id} variant="16x16_4" className="taskbar-icon" />
+                  <span>{portfolioConfig.pages[id]}</span>
+                </button>
+              ))}
 
               <div
                 className="start-menu-parent-wrap"
@@ -1328,12 +1352,8 @@ export default function Home() {
                           key={project.name}
                           type="button"
                           className="start-menu-item"
-                          disabled={!project.url}
                           onClick={() => {
-                            if (!project.url) {
-                              return;
-                            }
-                            openInBrowser(project.url, { title: project.name });
+                            openProject(project);
                             closeStartMenu();
                           }}
                         >
@@ -1380,10 +1400,6 @@ export default function Home() {
                     <button type="button" className="start-menu-item" onClick={() => openAppShortcut("linkedin")}>
                       <WindowIcon id="linkedin" variant="16x16_4" className="taskbar-icon" />
                       <span>{portfolioConfig.pages.linkedin}</span>
-                    </button>
-                    <button type="button" className="start-menu-item" onClick={() => openAppShortcut("github")}>
-                      <WindowIcon id="github" variant="16x16_4" className="taskbar-icon" />
-                      <span>{portfolioConfig.pages.github}</span>
                     </button>
                     <button type="button" className="start-menu-item" onClick={() => openAppShortcut("art")}>
                       <WindowIcon id="art" variant="16x16_4" className="taskbar-icon" />

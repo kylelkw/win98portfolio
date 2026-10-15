@@ -16,8 +16,21 @@ body {
 
 body {
   background: #008080;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.3;
+}
+
+.title-bar,
+.window,
+button,
+input,
+label,
+option,
+select,
+table,
+textarea,
+ul.tree-view {
+  font-size: 13px;
 }
 
 svg {
@@ -40,16 +53,17 @@ svg {
 
 .desktop-icon98 {
   all: unset;
+  box-sizing: border-box;
   position: absolute;
   width: 84px;
-  min-height: 72px;
+  height: 72px;
   color: #fff;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 3px;
-  padding: 3px 2px;
+  gap: 2px;
+  padding: 1px 2px;
   cursor: default;
   text-shadow: 1px 1px 0 #000;
   user-select: none;
@@ -76,13 +90,19 @@ svg {
 
 .desktop-icon-label {
   text-align: center;
-  font-size: 12px;
-  line-height: 1.2;
+  font-size: 14px;
+  line-height: 1.15;
   letter-spacing: 0.12px;
   max-width: 80px;
   word-break: break-word;
   padding: 1px 2px 0;
   border: 1px dotted transparent;
+}
+
+.desktop-icon-label-nowrap {
+  max-width: none;
+  white-space: nowrap;
+  word-break: normal;
 }
 
 .desktop-icon98.selected .desktop-icon-label {
@@ -143,7 +163,7 @@ svg {
 
 .section-title {
   margin: 0 0 6px;
-  font-size: 17px;
+  font-size: 19px;
 }
 
 .section-subtitle {
@@ -179,7 +199,7 @@ svg {
   border: 2px outset #fff;
   border-bottom: 0;
   background: #c0c0c0;
-  font-size: 12px;
+  font-size: 14px;
   cursor: default;
 }
 
@@ -197,7 +217,7 @@ svg {
   border: 2px inset #fff;
   background: #dfdfdf;
   padding: 10px;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.35;
 }
 
@@ -276,7 +296,7 @@ svg {
 
 .folder-shortcut-label {
   text-align: center;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.2;
   letter-spacing: 0.1px;
   padding: 1px 2px 0;
@@ -300,6 +320,8 @@ svg {
 }
 
 .folder-project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
   gap: 12px;
 }
 
@@ -354,7 +376,7 @@ svg {
   width: 26px;
   height: 26px;
   padding: 0;
-  font-size: 11px;
+  font-size: 13px;
   z-index: 2;
 }
 
@@ -412,7 +434,7 @@ svg {
 
 .art-gallery-caption {
   text-align: center;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.2;
   color: #000;
   padding: 1px 2px 0;
@@ -465,17 +487,17 @@ svg {
 
 .art-mobile-nav-button {
   min-height: 32px;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .art-mobile-index {
   text-align: center;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .art-gallery-state {
   margin: 0;
-  font-size: 12px;
+  font-size: 14px;
   color: #333;
 }
 
@@ -508,11 +530,32 @@ svg {
 }
 
 .folder-project-item {
-  width: 120px;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 6px;
+}
+
+.folder-project-item .folder-shortcut {
+  width: auto;
+  min-height: 32px;
+  flex-direction: row;
   align-items: center;
-  gap: 4px;
+}
+
+.folder-project-item .folder-shortcut-label {
+  text-align: left;
+  font-weight: 700;
+}
+
+.folder-project-item p {
+  margin: 0;
+}
+
+.project-name {
+  margin: 0;
+  font-size: 15px;
 }
 
 .mail-compose98 {
@@ -522,7 +565,7 @@ svg {
 }
 
 .mail-compose98 label {
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .mail-compose-input,
@@ -531,7 +574,7 @@ svg {
   border: 2px inset #fff;
   background: #fff;
   font: inherit;
-  font-size: 12px;
+  font-size: 14px;
   padding: 4px 6px;
 }
 
@@ -548,7 +591,7 @@ svg {
 
 .folder-shortcut-meta {
   margin: 0;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.2;
   text-align: center;
   color: #222;
@@ -557,14 +600,14 @@ svg {
 .missing-link {
   margin: 0;
   color: #555;
-  font-size: 12px;
+  font-size: 14px;
   text-align: center;
   font-style: italic;
 }
 
 .folder-hint {
   margin: 8px 0 0;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.3;
   color: #222;
 }
@@ -603,7 +646,7 @@ svg {
   border: 0;
   background: transparent;
   font: inherit;
-  font-size: 12px;
+  font-size: 14px;
   padding: 3px 7px 2px;
   max-width: 130px;
   overflow: hidden;
@@ -619,7 +662,7 @@ svg {
   border-left: 1px solid #808080;
   background: transparent;
   font: inherit;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1;
   padding: 0;
   cursor: default;
@@ -645,7 +688,7 @@ svg {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .browser-address-input {
@@ -677,10 +720,18 @@ svg {
 .browser-note {
   margin: 0;
   padding: 6px 8px;
-  font-size: 12px;
+  font-size: 14px;
   border-top: 1px solid #808080;
   box-shadow: inset 0 1px #fff;
   background: #c0c0c0;
+}
+
+.browser-home98 {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  padding: 16px;
+  background: #fff;
 }
 
 .browser-note a {
@@ -726,7 +777,7 @@ svg {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.25;
   letter-spacing: 0.12px;
   text-align: left;
@@ -760,7 +811,7 @@ svg {
 
 .start-menu-arrow {
   margin-left: auto;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .start-submenu98 {
@@ -781,7 +832,7 @@ svg {
 
 .start-submenu-empty {
   padding: 8px;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.25;
   color: #222;
 }
@@ -862,7 +913,7 @@ svg {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .task-button98.open {
@@ -881,7 +932,7 @@ svg {
   align-items: center;
   gap: 5px;
   justify-content: flex-start;
-  font-size: 12px;
+  font-size: 14px;
   padding: 0 6px;
   background: #c0c0c0;
 }
@@ -908,12 +959,12 @@ svg {
 
 .mobile98-title {
   margin: 0;
-  font-size: 19px;
+  font-size: 21px;
 }
 
 .mobile98-subtitle {
   margin: 5px 0 0;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .mobile98-window {
@@ -937,8 +988,22 @@ svg {
 
 .mobile-project-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
   gap: 8px;
+}
+
+.mobile-project-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  border: 2px inset #fff;
+  background: #fff;
+  padding: 8px;
+}
+
+.mobile-project-card p {
+  margin: 0;
 }
 
 .mobile-project-item {
@@ -948,18 +1013,6 @@ svg {
   gap: 6px;
   min-height: 32px;
   text-align: left;
-}
-
-.mobile-project-note {
-  border: 2px inset #fff;
-  background: #fff;
-  padding: 8px;
-}
-
-.mobile-project-note pre {
-  margin: 0;
-  white-space: pre-wrap;
-  word-break: break-word;
 }
 
 .mobile-action-row {
@@ -975,7 +1028,7 @@ svg {
   bottom: 0;
   z-index: 1900;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 2px;
   padding: 4px;
   border-top: 2px outset #fff;
@@ -989,7 +1042,7 @@ svg {
   align-items: center;
   justify-content: center;
   gap: 4px;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .mobile98-nav-button.active {
@@ -999,9 +1052,255 @@ svg {
 
 .mobile98-nav-label {
   min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+}
+
+.mini-game98 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+}
+
+.game-toolbar98,
+.tetris-stats98 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.game-toolbar98 button,
+.mini-game98 > button {
+  min-height: 32px;
+}
+
+.game-status98,
+.game-help98 {
+  margin: 0;
+  width: 100%;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.window-panel98 .game-status98,
+.window-panel98 .game-help98 {
+  margin: 0;
+}
+
+.game-status98 { min-height: 36px; }
+.game-help98 { max-width: 310px; }
+
+.mine-board98 {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  width: min(100%, 288px);
+  border: 3px inset #fff;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+button.mine-cell98 {
+  min-width: 0;
+  min-height: 0;
+  width: 100%;
+  aspect-ratio: 1;
+  padding: 0;
+  color: #000;
+  text-shadow: none;
+  font-weight: 700;
+  font-size: 17px;
+  touch-action: manipulation;
+}
+
+button.mine-cell98.revealed {
+  box-shadow: none;
+  border: 1px solid #999;
+  background: #c0c0c0;
+}
+
+button.mine-cell98:disabled { text-shadow: none; }
+button.mine-cell98[data-count="1"] { color: #0000c0; }
+button.mine-cell98[data-count="2"] { color: #006000; }
+button.mine-cell98[data-count="3"] { color: #b00000; }
+button.mine-cell98[data-count="4"] { color: #000060; }
+button.mine-cell98[data-count="5"] { color: #600000; }
+button.mine-cell98[data-count="6"] { color: #006060; }
+button.mine-cell98.mine { background: #f58585; color: #000; }
+
+.tetris-game98 { gap: 8px; }
+.tetris-game98:focus { outline: none; }
+.tetris-game98 .game-status98 { min-height: 18px; }
+
+.tetris-board98 {
+  width: min(100%, 160px);
+  aspect-ratio: 1 / 2;
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  grid-template-rows: repeat(20, minmax(0, 1fr));
+  border: 3px inset #fff;
+  background: #10121c;
+}
+
+.tetris-cell98 { border: 1px solid #ffffff0c; }
+.tetris-cell98:not([data-color="0"]) { box-shadow: inset 2px 2px #ffffff70, inset -2px -2px #0006; }
+.tetris-cell98[data-color="1"] { background: #00d8ef; }
+.tetris-cell98[data-color="2"] { background: #f9d43b; }
+.tetris-cell98[data-color="3"] { background: #ac6df2; }
+.tetris-cell98[data-color="4"] { background: #63d94b; }
+.tetris-cell98[data-color="5"] { background: #f25a64; }
+.tetris-cell98[data-color="6"] { background: #4986f5; }
+.tetris-cell98[data-color="7"] { background: #fba647; }
+
+.tetris-controls98 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 6px;
+  width: min(100%, 280px);
+}
+
+.tetris-controls98 button {
+  min-width: 0;
+  min-height: 36px;
+  padding: 3px;
+  touch-action: manipulation;
+}
+
+.tetris-hard-drop98 { grid-column: 1 / -1; }
+
+@media (max-width: 860px) {
+  .tetris-board98 { width: clamp(100px, calc((100dvh - 440px) / 2), 170px); }
+  .mobile98 { padding-bottom: 88px; }
+}
+
+.clippy-helper98 {
+  position: fixed;
+  right: 18px;
+  z-index: 1800;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  max-width: calc(100vw - 24px);
+}
+
+.clippy-bubble98 {
+  position: relative;
+  width: 272px;
+  max-width: 100%;
+  padding: 10px;
+  border: 1px solid #000;
+  border-radius: 8px;
+  background: #ffffce;
+  box-shadow: 2px 2px 0 #0005;
+  color: #000;
+  -webkit-font-smoothing: none;
+  font-family: "Pixelated MS Sans Serif", Arial, sans-serif;
+  font-size: 13px;
+}
+
+.clippy-bubble98::after {
+  content: "";
+  position: absolute;
+  right: 55px;
+  bottom: -7px;
+  width: 12px;
+  height: 12px;
+  border-right: 1px solid #000;
+  border-bottom: 1px solid #000;
+  background: #ffffce;
+  transform: rotate(45deg);
+}
+
+.clippy-close98 {
+  all: unset;
+  position: absolute;
+  top: 2px;
+  right: 5px;
+  padding: 2px;
+  color: #000;
+  cursor: pointer;
+  font: inherit;
+}
+
+.clippy-close98:focus-visible {
+  outline: 1px dotted #000;
+}
+
+.clippy-reopen98 {
+  all: unset;
+  display: block;
+  font: inherit;
+  color: #000;
+  cursor: pointer;
+}
+
+.clippy-prompt98 {
+  width: auto;
+  margin-right: 24px;
+}
+
+.clippy-prompt98::after {
+  right: 31px;
+}
+
+button.clippy-character98:focus,
+button.clippy-close98:focus,
+button.clippy-reopen98:focus {
+  outline: none;
+}
+
+button.clippy-character98:not(:disabled):hover,
+button.clippy-character98:not(:disabled):active,
+button.clippy-close98:not(:disabled):hover,
+button.clippy-close98:not(:disabled):active,
+button.clippy-reopen98:not(:disabled):hover,
+button.clippy-reopen98:not(:disabled):active {
+  background: transparent;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+button.clippy-close98:focus-visible,
+button.clippy-reopen98:focus-visible {
+  outline: 1px dotted #000;
+}
+
+.clippy-bubble98 p {
+  margin: 0;
+  padding-right: 12px;
+  line-height: 1.45;
+}
+
+.clippy-character98 {
+  all: unset;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+button.clippy-character98:focus-visible {
+  outline: 2px dotted #fff;
+  outline-offset: 2px;
+}
+
+.clippy-sprite98 {
+  display: block;
+  width: 124px;
+  height: 93px;
+  background: url("/clippy/map.png") no-repeat 0 0;
+}
+
+@media (max-width: 860px) {
+  .clippy-helper98 { right: 12px; }
+  .clippy-bubble98 { width: 248px; }
+  .clippy-prompt98 { width: auto; }
 }
 
 @media (max-width: 940px) {

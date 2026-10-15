@@ -1,14 +1,16 @@
 "use client";
 
 import { Explorer100 } from "@react95/icons";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import type { WindowId } from "../desktop-core";
-import { portfolioConfig, type CurrentProject } from "../portfolio.config";
+import { portfolioConfig } from "../portfolio.config";
 import { AboutContent } from "./about-content";
 import { ArtSlideshowContent } from "./art-slideshow-content";
 import { WindowIcon } from "./window-icon";
+import { MinesweeperContent } from "./minesweeper-content";
+import { TetrisContent } from "./tetris-content";
 
-export type MobileSectionId = "about" | "projects" | "art" | "resume" | "linkedin" | "github" | "email";
+export type MobileSectionId = "about" | "projects" | "art" | "resume" | "linkedin" | "email" | "minesweeper" | "tetris";
 
 const MOBILE_SECTIONS: Array<{ id: MobileSectionId; label: string; iconId: WindowId }> = [
   { id: "about", label: portfolioConfig.pages.about, iconId: "profile" },
@@ -16,8 +18,9 @@ const MOBILE_SECTIONS: Array<{ id: MobileSectionId; label: string; iconId: Windo
   { id: "art", label: portfolioConfig.pages.art, iconId: "art" },
   { id: "resume", label: portfolioConfig.pages.resume, iconId: "resume" },
   { id: "linkedin", label: portfolioConfig.pages.linkedin, iconId: "linkedin" },
-  { id: "github", label: portfolioConfig.pages.github, iconId: "github" },
   { id: "email", label: portfolioConfig.pages.email, iconId: "email" },
+  { id: "minesweeper", label: portfolioConfig.pages.minesweeper, iconId: "minesweeper" },
+  { id: "tetris", label: portfolioConfig.pages.tetris, iconId: "tetris" },
 ];
 
 interface MobilePortfolioContentProps {
@@ -30,9 +33,9 @@ interface MobilePortfolioContentProps {
   onEmailSubjectChange: (value: string) => void;
   onEmailBodyChange: (value: string) => void;
   onSendEmail: () => void;
+  onRequestProjectCode: () => void;
   onOpenResume: () => void;
   onOpenLinkedIn: () => void;
-  onOpenGitHub: () => void;
   onOpenProjectLink: (url: string) => void;
   artImageUrls: string[];
   artSlideIndex: number;
@@ -53,9 +56,9 @@ export function MobilePortfolioContent({
   onEmailSubjectChange,
   onEmailBodyChange,
   onSendEmail,
+  onRequestProjectCode,
   onOpenResume,
   onOpenLinkedIn,
-  onOpenGitHub,
   onOpenProjectLink,
   artImageUrls,
   artSlideIndex,
@@ -65,14 +68,13 @@ export function MobilePortfolioContent({
   onNextArt,
   onOpenArtImage,
 }: MobilePortfolioContentProps) {
-  const [selectedProjectNote, setSelectedProjectNote] = useState<CurrentProject | null>(null);
-
   const activeSectionMeta = useMemo(
     () => MOBILE_SECTIONS.find((section) => section.id === activeSection) ?? MOBILE_SECTIONS[0],
     [activeSection],
   );
 
   const renderSectionBody = () => {
+    if (activeSection === "minesweeper" || activeSection === "tetris") return null;
     if (activeSection === "about") {
       return <AboutContent aboutTab={aboutTab} setAboutTab={setAboutTab} />;
     }
@@ -81,38 +83,32 @@ export function MobilePortfolioContent({
       return (
         <div className="mobile-section-content">
           <h2 className="section-title">{portfolioConfig.pages.projects}</h2>
-          <p>Select a project to open it. Projects without a link open as a text note below.</p>
+          <p className="project-code-notice">
+            Code available upon contact. <a href="#email" onClick={(event) => {
+              event.preventDefault();
+              onRequestProjectCode();
+            }}>Email Me</a> to request access.
+          </p>
           <div className="mobile-project-list">
-            {portfolioConfig.currentProjects.map((project) => {
-              const projectUrl = project.url?.trim() ?? "";
-              const hasLink = projectUrl.length > 0;
-              return (
-                <button
-                  key={project.name}
-                  type="button"
-                  className="mobile-project-item"
-                  onClick={() => {
-                    if (hasLink) {
-                      setSelectedProjectNote(null);
-                      onOpenProjectLink(projectUrl);
-                      return;
-                    }
-                    setSelectedProjectNote(project);
-                  }}
-                >
-                  <Explorer100 variant="16x16_4" className="taskbar-icon" aria-hidden />
-                  <span>{hasLink ? project.name : `${project.name}.txt`}</span>
-                </button>
-              );
-            })}
+            {portfolioConfig.currentProjects.map((project) => (
+              <article key={project.name} className="mobile-project-card">
+                <h3 className="project-name">{project.name}</h3>
+                <p>{project.description}</p>
+                {project.url ? (
+                  <button
+                    type="button"
+                    className="mobile-project-item"
+                    onClick={() => {
+                      if (project.url) onOpenProjectLink(project.url);
+                    }}
+                  >
+                    <Explorer100 variant="16x16_4" className="taskbar-icon" aria-hidden />
+                    <span>View {project.name}</span>
+                  </button>
+                ) : null}
+              </article>
+            ))}
           </div>
-
-          {selectedProjectNote ? (
-            <div className="mobile-project-note">
-              <p className="section-subtitle">{`${selectedProjectNote.name}.txt`}</p>
-              <pre>{selectedProjectNote.description.trim() || "No external link is available for this project yet."}</pre>
-            </div>
-          ) : null}
         </div>
       );
     }
@@ -154,20 +150,6 @@ export function MobilePortfolioContent({
           <div className="mobile-action-row">
             <button type="button" onClick={onOpenLinkedIn}>
               Open LinkedIn
-            </button>
-          </div>
-        </div>
-      );
-    }
-
-    if (activeSection === "github") {
-      return (
-        <div className="mobile-section-content">
-          <h2 className="section-title">{portfolioConfig.pages.github}</h2>
-          <p>{portfolioConfig.github.description}</p>
-          <div className="mobile-action-row">
-            <button type="button" onClick={onOpenGitHub}>
-              Open GitHub
             </button>
           </div>
         </div>
@@ -219,7 +201,15 @@ export function MobilePortfolioContent({
             <span>{activeSectionMeta.label}</span>
           </div>
         </div>
-        <div className="window-body mobile98-window-body">{renderSectionBody()}</div>
+        <div className="window-body mobile98-window-body">
+          {renderSectionBody()}
+          <div hidden={activeSection !== "minesweeper"}>
+            <MinesweeperContent active={activeSection === "minesweeper"} />
+          </div>
+          <div hidden={activeSection !== "tetris"}>
+            <TetrisContent active={activeSection === "tetris"} />
+          </div>
+        </div>
       </section>
 
       <nav className="mobile98-nav" aria-label="Mobile section navigation">
@@ -227,11 +217,12 @@ export function MobilePortfolioContent({
           <button
             key={section.id}
             type="button"
+            aria-label={section.label}
             className={`mobile98-nav-button ${activeSection === section.id ? "active" : ""}`}
             onClick={() => onSectionChange(section.id)}
           >
             <WindowIcon id={section.iconId} variant="16x16_4" className="taskbar-icon" />
-            <span className="mobile98-nav-label">{section.label}</span>
+            <span className="mobile98-nav-label">{section.id === "minesweeper" ? "Mines" : section.label}</span>
           </button>
         ))}
       </nav>
