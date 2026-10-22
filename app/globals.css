@@ -1024,8 +1024,7 @@ svg {
 .mobile-resume-preview {
   display: block;
   width: 100%;
-  height: 65dvh;
-  min-height: 360px;
+  height: auto;
   border: 2px inset #fff;
   background: #fff;
 }

@@ -87,6 +87,16 @@ Icon correction verification: all 13 tests passed, TypeScript/ESLint and diff ch
 - [x] Keep a direct resume link as a fallback without relying on a JavaScript popup.
 - [x] Run required checks: all 13 tests, TypeScript, ESLint, diff checks, and an isolated production build passed.
 - [ ] Visually verify the mobile document (browser security policy blocked the local preview check).
-- [ ] Commit and push the fix to GitHub, then check the deployment outcome.
+- [x] Commit and push the fix to GitHub, then check the deployment outcome (7ddfc56; production deployment succeeded).
 
-Current step: publish the verified mobile resume code and check deployment. The mobile section now uses the same Google Drive PDF preview helper as desktop, with a full-width phone-sized frame and a direct-link fallback. Visual verification remains unavailable because of browser policy. Earlier portfolio updates are already committed in the current main checkout.
+The user confirmed the Google Drive iframe still appears blank on mobile. Superseded by the correction below.
+
+## Mobile resume blank-frame correction and headline
+
+- [x] Retrieve the linked one-page PDF and visually inspect a high-resolution image rendered from it.
+- [x] Replace only the mobile iframe with the locally hosted image, scaled to the available width with a full-size image link; retain the original resume link above it.
+- [x] Update the shared headline to the approved "Software Developer & Computer Vision Researcher".
+- [x] Run focused rendering checks, all 14 tests, lint, types, and the isolated production build; the server returned the inspected image byte-for-byte with HTTP 200 and image/webp.
+- [ ] Publish the correction and confirm deployment.
+
+Current step: publish the verified correction. The preview image must be regenerated whenever the linked resume changes: render the one-page PDF with `pdftoppm -scale-to 2000 -singlefile -png`, then convert to WebP at quality 92 (1546 x 2000). Browser visual testing remains blocked by the browser URL policy; the actual resume image has been visually inspected locally.

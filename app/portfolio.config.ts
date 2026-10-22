@@ -42,7 +42,7 @@ export interface PortfolioConfig {
   headline: string;
   aboutSubtabs: AboutSubtab[];
   contactEmail: ContactEmail;
-  resume: PortfolioLink;
+  resume: PortfolioLink & { previewImage: string };
   linkedin: PortfolioLink;
   artPortfolio: PortfolioLink;
   currentProjects: CurrentProject[];
@@ -61,7 +61,7 @@ export const portfolioConfig: PortfolioConfig = {
     tetris: "Tetris",
   },
   name: "Kyle Lee",
-  headline: "Aspiring Developer, Analyst, and Creative Builder",
+  headline: "Software Developer & Computer Vision Researcher",
   aboutSubtabs: [
     {
       id: "general",
@@ -113,6 +113,8 @@ export const portfolioConfig: PortfolioConfig = {
   resume: {
     label: "Resume",
     url: "https://drive.google.com/file/d/1pkLiBIRbPGk7TwhtKIrR1Yiqa-uWOLEO/view?usp=sharing",
+    // Regenerate this image from the PDF whenever the linked resume changes.
+    previewImage: "/resume/kyle-lee-resume.webp",
     description: "View my resume, experience, and selected projects.",
   },
   linkedin: {

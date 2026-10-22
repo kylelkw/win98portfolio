@@ -1,8 +1,9 @@
 "use client";
 
 import { Explorer100 } from "@react95/icons";
+import Image from "next/image";
 import { useMemo } from "react";
-import { getBrowserFrameUrl, type WindowId } from "../desktop-core";
+import type { WindowId } from "../desktop-core";
 import { portfolioConfig } from "../portfolio.config";
 import { AboutContent } from "./about-content";
 import { ArtSlideshowContent } from "./art-slideshow-content";
@@ -131,17 +132,22 @@ export function MobilePortfolioContent({
         <div className="mobile-section-content">
           <h2 className="section-title">{portfolioConfig.pages.resume}</h2>
           <p>{portfolioConfig.resume.description}</p>
-          <iframe
-            className="mobile-resume-preview"
-            src={getBrowserFrameUrl(portfolioConfig.resume.url, false, "pdf")}
-            title={`${portfolioConfig.name} resume preview`}
-            referrerPolicy="strict-origin-when-cross-origin"
-          />
           <div className="mobile-action-row">
             <a href={portfolioConfig.resume.url} target="_blank" rel="noopener noreferrer">
               Open resume in a new tab
             </a>
           </div>
+          <p>Tap the preview to view it full size.</p>
+          <a href={portfolioConfig.resume.previewImage} target="_blank" rel="noopener noreferrer">
+            <Image
+              className="mobile-resume-preview"
+              src={portfolioConfig.resume.previewImage}
+              alt={`${portfolioConfig.name}'s resume: education, technical skills, experience, and projects. Open the resume link above for selectable text.`}
+              width={1546}
+              height={2000}
+              unoptimized
+            />
+          </a>
         </div>
       );
     }
