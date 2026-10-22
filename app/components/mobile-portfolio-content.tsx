@@ -2,7 +2,7 @@
 
 import { Explorer100 } from "@react95/icons";
 import { useMemo } from "react";
-import type { WindowId } from "../desktop-core";
+import { getBrowserFrameUrl, type WindowId } from "../desktop-core";
 import { portfolioConfig } from "../portfolio.config";
 import { AboutContent } from "./about-content";
 import { ArtSlideshowContent } from "./art-slideshow-content";
@@ -34,7 +34,6 @@ interface MobilePortfolioContentProps {
   onEmailBodyChange: (value: string) => void;
   onSendEmail: () => void;
   onRequestProjectCode: () => void;
-  onOpenResume: () => void;
   onOpenLinkedIn: () => void;
   onOpenProjectLink: (url: string) => void;
   artImageUrls: string[];
@@ -57,7 +56,6 @@ export function MobilePortfolioContent({
   onEmailBodyChange,
   onSendEmail,
   onRequestProjectCode,
-  onOpenResume,
   onOpenLinkedIn,
   onOpenProjectLink,
   artImageUrls,
@@ -133,10 +131,16 @@ export function MobilePortfolioContent({
         <div className="mobile-section-content">
           <h2 className="section-title">{portfolioConfig.pages.resume}</h2>
           <p>{portfolioConfig.resume.description}</p>
+          <iframe
+            className="mobile-resume-preview"
+            src={getBrowserFrameUrl(portfolioConfig.resume.url, false, "pdf")}
+            title={`${portfolioConfig.name} resume preview`}
+            referrerPolicy="strict-origin-when-cross-origin"
+          />
           <div className="mobile-action-row">
-            <button type="button" onClick={onOpenResume}>
-              Open Resume
-            </button>
+            <a href={portfolioConfig.resume.url} target="_blank" rel="noopener noreferrer">
+              Open resume in a new tab
+            </a>
           </div>
         </div>
       );

@@ -1154,7 +1154,6 @@ export default function Home() {
         onEmailBodyChange={setEmailBody}
         onSendEmail={sendEmailFromSite}
         onRequestProjectCode={requestProjectCode}
-        onOpenResume={() => openExternalLink(portfolioConfig.resume.url)}
         onOpenLinkedIn={() => openExternalLink(portfolioConfig.linkedin.url)}
         onOpenProjectLink={openExternalLink}
         artImageUrls={artImageUrls}

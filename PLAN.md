@@ -81,4 +81,12 @@ Icon correction verification: all 13 tests passed, TypeScript/ESLint and diff ch
 - [x] Rename Current Projects to Projects and Internet Explorer to Internet in the shared labels used by icons, windows, menus, and mobile navigation.
 - [x] Make the browser start-page heading use the shared browser label.
 
-Current step: complete. Label changes are local and undeployed; no new production build was needed for this text-only change.
+## Mobile resume fix and publishing
+
+- [x] Show the resume directly in the mobile Resume section using the existing PDF preview URL helper and a phone-sized iframe.
+- [x] Keep a direct resume link as a fallback without relying on a JavaScript popup.
+- [x] Run required checks: all 13 tests, TypeScript, ESLint, diff checks, and an isolated production build passed.
+- [ ] Visually verify the mobile document (browser security policy blocked the local preview check).
+- [ ] Commit and push the fix to GitHub, then check the deployment outcome.
+
+Current step: publish the verified mobile resume code and check deployment. The mobile section now uses the same Google Drive PDF preview helper as desktop, with a full-width phone-sized frame and a direct-link fallback. Visual verification remains unavailable because of browser policy. Earlier portfolio updates are already committed in the current main checkout.

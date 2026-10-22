@@ -1021,6 +1021,15 @@ svg {
   gap: 6px;
 }
 
+.mobile-resume-preview {
+  display: block;
+  width: 100%;
+  height: 65dvh;
+  min-height: 360px;
+  border: 2px inset #fff;
+  background: #fff;
+}
+
 .mobile98-nav {
   position: fixed;
   left: 0;
